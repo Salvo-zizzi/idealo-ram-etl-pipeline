@@ -1,0 +1,15 @@
+# Credenziali - NON committare mai
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+__pycache__/
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+
+# Dati grezzi da non ridistribuire pubblicamente
+data/raw/

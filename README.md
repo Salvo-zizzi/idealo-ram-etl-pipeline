@@ -6,8 +6,29 @@ Progetto svolto come homework per il corso **Big Data Processing & Data Engineer
 
 ## Architettura
 
-```
-Idealo (IT/DE) → Source (raw JSON) → Staging → Data Warehouse (MongoDB Atlas) → Export CSV → Visualizzazione
+```mermaid
+graph LR
+    subgraph Fonti [Fonte Esterna]
+        A[Idealo IT / DE<br><i>endpoint interno searchResult</i>]
+    end
+
+    C[Cattura manuale JSON <br><i>via DevTools del browser</i>]
+
+    subgraph Mongo ["MongoDB Atlas (idealo_ram)"]
+        direction LR
+        D[(1. Source Area <br><i>sc_ram_ddr4_it / _de, sc_ram_ddr5_it / _de</i>)]
+        E[(2. Staging Area <br><i>st_ram_ddr4_it / _de, st_ram_ddr5_it / _de</i>)]
+        F[(3. Data Warehouse <br><i>dw_ram_products</i>)]
+        D -->|ETL: Pulizia e Regex via Python| E
+        E -->|Merge dei 4 segmenti in un'unica collection| F
+    end
+
+    A -->|Estrazione JSON per pagina| C
+    C -->|Caricamento as-is| D
+
+    style Fonti fill:#f5f5f5,stroke:#ccc,stroke-width:1px
+    style Mongo fill:#eef7f2,stroke:#00ed64,stroke-width:1px
+    style C fill:#fff,stroke:#333,stroke-width:2px
 ```
 
 - **Source**: dati grezzi catturati dall'API interna di Idealo (`/csr/api/v2/modules/searchResult`) via browser DevTools, essendo lo scraping automatizzato (Selenium, Playwright-stealth, curl_cffi) bloccato da fingerprinting TLS/comportamentale.
@@ -29,7 +50,6 @@ Idealo (IT/DE) → Source (raw JSON) → Staging → Data Warehouse (MongoDB Atl
 │   ├── processed/        # Export finale del DWH (dw_ram_products.csv)
 │   └── samples/          # Documenti di esempio ed evidenze (source/DWH)
 ├── plots/                # Visualizzazioni finali (matplotlib)
-├── slides/                # Deliverable HW1 (ETL) e HW2 (Data Viz) in PDF
 ├── Report_tecnico.md     # Report tecnico completo del progetto
 └── .env.example           # Template variabili d'ambiente
 ```
@@ -48,4 +68,12 @@ Python · Jupyter · pandas · pymongo · MongoDB Atlas (M0 free tier) · matplo
 
 ## Risultati
 
-656 prodotti mappati (IT DDR4=174, IT DDR5=152, DE DDR4=174, DE DDR5=156). Analisi comparativa di prezzi, distribuzione e assortimento tra i due mercati — dettagli completi in `Report_tecnico.md` e nelle slide in `slides/`.
+656 prodotti mappati (IT DDR4=174, IT DDR5=152, DE DDR4=174, DE DDR5=156). Analisi comparativa di prezzi, distribuzione e assortimento tra i due mercati — dettagli completi in `Report_tecnico.md`.
+
+<p align="center">
+  <img src="plots/01_boxplot_prezzi_mercati.png" width="32%" />
+  <img src="plots/03_scatter_matched_pairs.png" width="32%" />
+  <img src="plots/04_top15_delta_prezzo.png" width="32%" />
+</p>
+
+Altre visualizzazioni (assortimento SKU, capacità/frequenza per mercato, maturità dell'assortimento DDR5) disponibili in `plots/`.

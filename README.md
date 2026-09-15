@@ -2,8 +2,6 @@
 
 Pipeline di data engineering e visualizzazione per l'analisi dei prezzi delle memorie RAM (DDR4/DDR5) sui mercati italiano e tedesco, basata su dati Idealo.
 
-Progetto svolto come homework per il corso **Big Data Processing & Data Engineering** — Master in Business Intelligence & Big Data Analytics, Università degli Studi di Milano-Bicocca (A.A. 2025/2026), prof. Pelucchi, Vaccarino, Nobani.
-
 ## Architettura
 
 ```mermaid
